@@ -1,7 +1,6 @@
 export { default as Aurora } from "./Aurora";
+export { default as SplashScreen } from "./SplashScreen";
+export { default as AppWrapper } from "./AppWrapper";
 
 // Re-export types
 export type { CSSProperties } from "react";
-
-// You can add more component exports here as you create them
-// export { default as OtherComponent } from './OtherComponent';

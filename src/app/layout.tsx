@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import { SplashProvider } from "@/contexts/SplashContext";
+import AppWrapper from "@/components/AppWrapper";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -21,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${montserrat.variable} font-sans antialiased`}>
-        {children}
+        <SplashProvider>
+          <AppWrapper>{children}</AppWrapper>
+        </SplashProvider>
       </body>
     </html>
   );
