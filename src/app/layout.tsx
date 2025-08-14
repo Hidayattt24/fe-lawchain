@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { SplashProvider } from "@/contexts/SplashContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import AppWrapper from "@/components/AppWrapper";
 import "./globals.css";
 
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
@@ -22,10 +23,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} font-sans antialiased`}>
-        <SplashProvider>
-          <AppWrapper>{children}</AppWrapper>
-        </SplashProvider>
+      <body className={`${poppins.variable} font-sans antialiased`}>
+        <ThemeProvider>
+          <SplashProvider>
+            <AppWrapper>{children}</AppWrapper>
+          </SplashProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
