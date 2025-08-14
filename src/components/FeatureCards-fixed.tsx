@@ -63,6 +63,39 @@ export const AnimatedCardsContainer = () => {
 
   return (
     <div className="w-full max-w-7xl mx-auto">
+      {/* Center Indicator */}
+      <div className="text-center mb-8">
+        <div className="flex justify-center items-center gap-2 mb-4">
+          {cardData.map((_, index) => (
+            <div
+              key={index}
+              className={`w-3 h-3 rounded-full transition-all duration-500 ${
+                index === centerIndex
+                  ? "bg-[#4F1787] scale-125 shadow-lg"
+                  : "bg-gray-400 scale-100"
+              }`}
+            />
+          ))}
+        </div>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Sedang menampilkan:{" "}
+          <span className="font-semibold text-[#4F1787]">
+            {cardData[centerIndex].title}
+          </span>
+          <br />
+          <span className="text-xs opacity-60">
+            Urutan rotasi:{" "}
+            {cardData
+              .map((card, idx) =>
+                idx === centerIndex
+                  ? `[${card.title.split(" ")[0]}]`
+                  : card.title.split(" ")[0]
+              )
+              .join(" → ")}
+          </span>
+        </p>
+      </div>
+
       {/* Cards Container */}
       <div className="flex items-center justify-center gap-4 md:gap-8 h-[400px] md:h-[500px] relative px-4">
         {cardData.map((card, index) => {
@@ -93,13 +126,25 @@ export const AnimatedCardsContainer = () => {
               >
                 <CardSkeletonContainer>
                   <div className="p-4 md:p-8 overflow-hidden h-full relative flex items-center justify-center">
-                    <Image
-                      src={card.image}
-                      alt={card.alt}
-                      width={isCenter ? 220 : 180}
-                      height={isCenter ? 220 : 180}
-                      className="h-auto w-auto max-w-full"
-                    />
+                    <motion.div
+                      animate={{
+                        rotate: isCenter ? [0, 360] : [0, 180, 0],
+                        scale: isCenter ? [1, 1.1, 1] : [1, 0.9, 1],
+                      }}
+                      transition={{
+                        duration: isCenter ? 4 : 6,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                    >
+                      <Image
+                        src={card.image}
+                        alt={card.alt}
+                        width={isCenter ? 220 : 180}
+                        height={isCenter ? 220 : 180}
+                        className="h-auto w-auto max-w-full"
+                      />
+                    </motion.div>
                   </div>
                 </CardSkeletonContainer>
                 <CardTitle

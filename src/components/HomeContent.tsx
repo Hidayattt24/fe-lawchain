@@ -5,9 +5,7 @@ import {
   FloatingDock,
   BlurText,
   ThemeToggle,
-  AITechCard,
-  EasyLanguageCard,
-  ComfortableUICard,
+  AnimatedCardsContainer,
 } from "@/components";
 import { IconHome, IconApps, IconQuestionMark } from "@tabler/icons-react";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -181,31 +179,9 @@ const HomeContent = () => {
       {/* Mengapa Kami Section */}
       <section id="mengapa-kami" className="relative z-10 py-20 px-8">
         <div className="max-w-7xl mx-auto">
-          {/* Section Title */}
-          <div className="mb-16 text-center">
-            <div className="flex justify-center">
-              <BlurText
-                text="Mengapa "
-                className={`${
-                  theme === "dark" ? "text-white" : "text-black"
-                } poppins-semibold text-5xl leading-normal`}
-                animateBy="words"
-                delay={0.1}
-              />
-              <BlurText
-                text="Kami?"
-                className="text-[#4F1787] poppins-semibold text-5xl leading-normal"
-                animateBy="words"
-                delay={0.15}
-              />
-            </div>
-          </div>
-
-          {/* Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <AITechCard />
-            <EasyLanguageCard />
-            <ComfortableUICard />
+          {/* Animated Cards */}
+          <div className="w-full max-w-6xl mx-auto">
+            <AnimatedCardsContainer />
           </div>
         </div>
       </section>

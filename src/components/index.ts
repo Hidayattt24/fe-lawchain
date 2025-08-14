@@ -14,6 +14,7 @@ export {
   AITechCard,
   EasyLanguageCard,
   ComfortableUICard,
+  AnimatedCardsContainer,
 } from "./FeatureCards";
 
 // Re-export types
