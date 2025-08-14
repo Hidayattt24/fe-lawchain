@@ -3,6 +3,7 @@ export { default as SplashScreen } from "./SplashScreen";
 export { default as AppWrapper } from "./AppWrapper";
 export { default as BlurText } from "./BlurText";
 export { default as ThemeToggle } from "./ThemeToggle";
+export { default as MobileWarning } from "./MobileWarning";
 export { FloatingDock } from "./FloatingDock";
 export {
   Card,

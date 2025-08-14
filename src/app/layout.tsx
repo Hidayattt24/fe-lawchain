@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import { SplashProvider } from "@/contexts/SplashContext";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import AppWrapper from "@/components/AppWrapper";
+import MobileWarning from "@/components/MobileWarning";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -26,6 +27,7 @@ export default function RootLayout({
       <body className={`${poppins.variable} font-sans antialiased`}>
         <ThemeProvider>
           <SplashProvider>
+            <MobileWarning />
             <AppWrapper>{children}</AppWrapper>
           </SplashProvider>
         </ThemeProvider>
