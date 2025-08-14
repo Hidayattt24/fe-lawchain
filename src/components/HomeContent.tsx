@@ -1,7 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { FloatingDock, BlurText, ThemeToggle } from "@/components";
+import {
+  FloatingDock,
+  BlurText,
+  ThemeToggle,
+  AITechCard,
+  EasyLanguageCard,
+  ComfortableUICard,
+} from "@/components";
 import { IconHome, IconApps, IconQuestionMark } from "@tabler/icons-react";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -167,6 +174,38 @@ const HomeContent = () => {
               height={600}
               className="h-auto w-auto max-w-full filter drop-shadow-lg"
             />
+          </div>
+        </div>
+      </section>
+
+      {/* Mengapa Kami Section */}
+      <section id="mengapa-kami" className="relative z-10 py-20 px-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Title */}
+          <div className="mb-16 text-center">
+            <div className="flex justify-center">
+              <BlurText
+                text="Mengapa "
+                className={`${
+                  theme === "dark" ? "text-white" : "text-black"
+                } poppins-semibold text-5xl leading-normal`}
+                animateBy="words"
+                delay={0.1}
+              />
+              <BlurText
+                text="Kami?"
+                className="text-[#4F1787] poppins-semibold text-5xl leading-normal"
+                animateBy="words"
+                delay={0.15}
+              />
+            </div>
+          </div>
+
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <AITechCard />
+            <EasyLanguageCard />
+            <ComfortableUICard />
           </div>
         </div>
       </section>
