@@ -4,6 +4,7 @@ export { default as AppWrapper } from "./AppWrapper";
 export { default as BlurText } from "./BlurText";
 export { default as ThemeToggle } from "./ThemeToggle";
 export { default as MobileWarning } from "./MobileWarning";
+export { default as HyperSpeed } from "./HyperSpeed";
 export { FloatingDock } from "./FloatingDock";
 export {
   Card,

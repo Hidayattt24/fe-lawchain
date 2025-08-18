@@ -3,9 +3,9 @@
 import Image from "next/image";
 import {
   FloatingDock,
-  BlurText,
   ThemeToggle,
   AnimatedCardsContainer,
+  HyperSpeed,
 } from "@/components";
 import { IconHome, IconApps, IconQuestionMark } from "@tabler/icons-react";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -55,8 +55,36 @@ const HomeContent = () => {
         theme === "dark" ? "bg-black" : "bg-white"
       }`}
     >
+      {/* HyperSpeed Background - Full Screen */}
+      <div className="fixed inset-0 z-0" style={{ opacity: 0.4 }}>
+        <HyperSpeed
+          effectOptions={{
+            speedUp: 1.5,
+            fov: 85,
+            fovSpeedUp: 120,
+          }}
+          colors={{
+            roadColor: theme === "dark" ? 0x1a1a2e : 0xf0f0f0,
+            islandColor: theme === "dark" ? 0x16213e : 0xe0e0e0,
+            background: theme === "dark" ? 0x0f0f23 : 0xffffff,
+            shoulderLines: theme === "dark" ? 0x4f1787 : 0x6366f1,
+            brokenLines: theme === "dark" ? 0x4f1787 : 0x6366f1,
+            leftCars:
+              theme === "dark"
+                ? [0x4f1787, 0x6750a2, 0xc247ac]
+                : [0x8b5cf6, 0xa855f7, 0xc084fc],
+            rightCars:
+              theme === "dark"
+                ? [0x03b3c3, 0x0e5ea5, 0x324555]
+                : [0x06b6d4, 0x0284c7, 0x0369a1],
+            sticks: theme === "dark" ? 0x4f1787 : 0x8b5cf6,
+          }}
+        />
+      </div>
       {/* Theme Toggle */}
-      <ThemeToggle />
+      <div className="relative z-20">
+        <ThemeToggle />
+      </div>
 
       {/* Floating Dock */}
       <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-30">
@@ -80,7 +108,7 @@ const HomeContent = () => {
         id="beranda"
         className="relative z-10 flex items-center justify-center min-h-screen px-8"
       >
-        <div className="text-center max-w-6xl">
+        <div className="text-center max-w-6xl relative z-10">
           {/* Logo Above Title */}
           <div className="mb-12 flex justify-center">
             <Image
@@ -96,44 +124,36 @@ const HomeContent = () => {
           {/* Main Title */}
           <div className="mb-8 text-center">
             <div className="justify-center">
-              <BlurText
-                text="Satu Klik,"
+              <h1
                 className={`${
                   theme === "dark" ? "text-white" : "text-black"
                 } poppins-semibold text-6xl leading-normal justify-center`}
-                animateBy="words"
-                delay={0.1}
-              />
+              >
+                Satu Klik,
+              </h1>
             </div>
             <div className="flex justify-center">
-              <BlurText
-                text="Pahami "
+              <h1
                 className={`${
                   theme === "dark" ? "text-white" : "text-black"
                 } poppins-semibold text-6xl leading-normal`}
-                animateBy="words"
-                delay={0.15}
-              />
-              <BlurText
-                text="Hukum."
-                className="text-[#4F1787] poppins-semibold text-6xl leading-normal"
-                animateBy="words"
-                delay={0.2}
-              />
+              >
+                Pahami Hukum.
+              </h1>
             </div>
           </div>
 
           {/* Description */}
           <div className="mb-12 max-w-5xl mx-auto text-center">
-            <BlurText
-              text="Tanya apa saja seputar UUD 1945 dan dapatkan jawaban yang akurat. LawChain memanfaatkan RAG, LLaMA3, dan Ollama untuk memberikan informasi hukum yang cepat, jelas, dan dapat dipercaya."
+            <p
               className={`${
                 theme === "dark" ? "text-white" : "text-black"
               } poppins-medium text-2xl leading-normal justify-center`}
-              animateBy="words"
-              delay={0.03}
-              stepDuration={0.2}
-            />
+            >
+              Tanya apa saja seputar UUD 1945 dan dapatkan jawaban yang akurat.
+              LawChain memanfaatkan RAG, LLaMA3, dan Ollama untuk memberikan
+              informasi hukum yang cepat, jelas, dan dapat dipercaya.
+            </p>
           </div>
 
           {/* Action Buttons */}
