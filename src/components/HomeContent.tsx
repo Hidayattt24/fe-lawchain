@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import {
   FloatingDock,
   ThemeToggle,
@@ -12,6 +13,11 @@ import { useTheme } from "@/contexts/ThemeContext";
 
 const HomeContent = () => {
   const { theme } = useTheme();
+  const router = useRouter();
+
+  const handleNavigateToChatbot = () => {
+    router.push("/chatbot");
+  };
 
   const dockItems = [
     {
@@ -158,10 +164,16 @@ const HomeContent = () => {
 
           {/* Action Buttons */}
           <div className="flex items-center justify-center space-x-6">
-            <button className="w-64 h-14 bg-[#4F1787] text-white poppins-medium rounded-full hover:bg-[#3e125c] transition-colors duration-300">
+            <button
+              onClick={handleNavigateToChatbot}
+              className="w-64 h-14 bg-[#4F1787] text-white poppins-medium rounded-full hover:bg-[#3e125c] transition-colors duration-300"
+            >
               Mulai Sekarang
             </button>
-            <button className="w-24 h-14 bg-[#4F1787] rounded-full flex items-center justify-center hover:bg-[#3e125c] transition-colors duration-300">
+            <button
+              onClick={handleNavigateToChatbot}
+              className="w-24 h-14 bg-[#4F1787] rounded-full flex items-center justify-center hover:bg-[#3e125c] transition-colors duration-300"
+            >
               <svg
                 className="w-6 h-6 text-white"
                 fill="none"
