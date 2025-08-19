@@ -496,7 +496,6 @@ Buat Pull Request dengan deskripsi yang jelas tentang perubahan yang dilakukan.
 - 📋 Copy functionality
 - 🎨 Modern UI/UX dengan Tailwind CSS
 - ⚡ Real-time API status monitoring
-- 📱 Responsive design untuk semua device
 
 ### Planned Features
 
@@ -520,8 +519,8 @@ Buat Pull Request dengan deskripsi yang jelas tentang perubahan yang dilakukan.
 ### Developer Contact
 
 - **GitHub**: [@Hidayattt24](https://github.com/Hidayattt24)
-- **Email**: [your-email@domain.com]
-- **LinkedIn**: [Your LinkedIn Profile]
+- **Email**: [hidayatnurhakim2412@gmail.com]
+- **LinkedIn**: [www.linkedin.com/in/hidayat-nur-hakim]
 
 ## 📄 License
 
