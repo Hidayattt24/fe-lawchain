@@ -18,6 +18,8 @@ import {
   QuestionResponse,
   SourceDocument,
 } from "@/lib/api";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface ChatMessage {
   id: string;
@@ -48,9 +50,25 @@ const ChatbotPage = () => {
     try {
       await navigator.clipboard.writeText(text);
       setCopiedMessageId(messageId);
+      toast.success("📋 Teks berhasil disalin ke clipboard!", {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+      });
       setTimeout(() => setCopiedMessageId(null), 2000);
     } catch (err) {
       console.error("Failed to copy text: ", err);
+      toast.error("❌ Gagal menyalin teks ke clipboard.", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
 
@@ -122,9 +140,31 @@ const ChatbotPage = () => {
       try {
         await lawchainAPI.healthCheck();
         setApiStatus("healthy");
+        toast.success(
+          "🤖 Koneksi dengan backend AI berhasil! Siap untuk menjawab pertanyaan Anda.",
+          {
+            position: "bottom-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
+        );
       } catch (error) {
         console.error("API health check failed:", error);
         setApiStatus("unhealthy");
+        toast.error(
+          "❌ Gagal terhubung dengan backend AI. Silakan periksa koneksi atau coba lagi nanti.",
+          {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
+        );
       }
     };
 
@@ -153,6 +193,19 @@ const ChatbotPage = () => {
     setInputMessage("");
     setIsLoading(true);
 
+    // Show loading notification
+    const loadingToastId = toast.info(
+      "⏳ Maaf ini membutuhkan waktu lama karena model LLaMA yang digunakan menggunakan running dari local. Mohon tunggu sebentar...",
+      {
+        position: "bottom-right",
+        autoClose: false,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+      }
+    );
+
     try {
       // Prepare request
       const request: QuestionRequest = {
@@ -163,6 +216,22 @@ const ChatbotPage = () => {
 
       // Call API
       const response: QuestionResponse = await lawchainAPI.askQuestion(request);
+
+      // Dismiss loading toast
+      toast.dismiss(loadingToastId);
+
+      // Show success notification
+      toast.success(
+        "✅ Pertanyaan berhasil diproses! Jawaban telah diterima dari model LLaMA.",
+        {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
 
       // Create bot response message
       const botResponse: ChatMessage = {
@@ -179,6 +248,24 @@ const ChatbotPage = () => {
       setMessages((prev) => [...prev, botResponse]);
     } catch (error) {
       console.error("Error sending message:", error);
+
+      // Dismiss loading toast
+      toast.dismiss(loadingToastId);
+
+      // Show error notification
+      toast.error(
+        `❌ Terjadi kesalahan saat memproses pertanyaan: ${
+          error instanceof Error ? error.message : "Silakan coba lagi."
+        }`,
+        {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
 
       // Create error response message
       const errorResponse: ChatMessage = {
@@ -205,6 +292,17 @@ const ChatbotPage = () => {
     setMessages([]);
     setInputMessage("");
     setIsLoading(false);
+    toast.info(
+      "🔄 Chat telah disegarkan. Anda dapat memulai percakapan baru.",
+      {
+        position: "bottom-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      }
+    );
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -562,7 +660,7 @@ const ChatbotPage = () => {
                           </div>
 
                           <div className="space-y-4">
-                            {message.sources.slice(0, 3).map((source, idx) => {
+                            {message.sources.map((source, idx) => {
                               const sourceInfo =
                                 documentSources[source.dokumen];
 
@@ -587,7 +685,7 @@ const ChatbotPage = () => {
                                           className="text-white px-2 py-1 rounded text-xs font-bold"
                                           style={{ backgroundColor: "#6339D7" }}
                                         >
-                                          Pasal/Bagian
+                                          Dokumen {idx + 1}
                                         </span>
                                         <span className="text-sm font-semibold text-gray-700">
                                           Halaman {source.halaman}
@@ -829,6 +927,22 @@ const ChatbotPage = () => {
           </div>
         </div>
       </div>
+
+      {/* Toast Container for notifications */}
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        style={{ zIndex: 9999 }}
+        limit={3}
+      />
     </div>
   );
 };
