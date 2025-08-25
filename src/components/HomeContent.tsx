@@ -7,13 +7,25 @@ import {
   ThemeToggle,
   AnimatedCardsContainer,
   HyperSpeed,
+  RevealWrapper,
 } from "@/components";
 import { IconHome, IconApps, IconQuestionMark } from "@tabler/icons-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 const HomeContent = () => {
   const { theme } = useTheme();
   const router = useRouter();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
 
   const handleNavigateToChatbot = () => {
     router.push("/chatbot");
@@ -57,12 +69,19 @@ const HomeContent = () => {
 
   return (
     <div
+      ref={containerRef}
       className={`relative font-sans min-h-screen scroll-smooth transition-colors duration-300 ${
         theme === "dark" ? "bg-black" : "bg-white"
       }`}
     >
-      {/* HyperSpeed Background - Full Screen */}
-      <div className="fixed inset-0 z-0" style={{ opacity: 0.4 }}>
+      {/* HyperSpeed Background - Full Screen with Parallax */}
+      <motion.div
+        className="fixed inset-0 z-0"
+        style={{
+          opacity: 0.4,
+          y: backgroundY,
+        }}
+      >
         <HyperSpeed
           effectOptions={{
             speedUp: 1.5,
@@ -86,7 +105,7 @@ const HomeContent = () => {
             sticks: theme === "dark" ? 0x4f1787 : 0x8b5cf6,
           }}
         />
-      </div>
+      </motion.div>
       {/* Theme Toggle */}
       <div className="relative z-20">
         <ThemeToggle />
@@ -114,97 +133,124 @@ const HomeContent = () => {
         id="beranda"
         className="relative z-10 flex items-center justify-center min-h-screen px-8"
       >
-        <div className="text-center max-w-6xl relative z-10">
+        <motion.div
+          className="text-center max-w-6xl relative z-10"
+          style={{ y: textY }}
+        >
           {/* Logo Above Title */}
-          <div className="mb-12 flex justify-center">
-            <Image
-              src={theme === "dark" ? "/logo/logo.svg" : "/logo/logo-2.svg"}
-              alt="LawChain Logo"
-              width={150}
-              height={60}
-              priority
-              className="h-auto w-auto filter drop-shadow-lg"
-            />
-          </div>
+          <RevealWrapper direction="scale" delay={0.2} duration={0.8}>
+            <div className="mb-12 flex justify-center">
+              <Image
+                src={theme === "dark" ? "/logo/logo.svg" : "/logo/logo-2.svg"}
+                alt="LawChain Logo"
+                width={150}
+                height={60}
+                priority
+                className="h-auto w-auto filter drop-shadow-lg"
+              />
+            </div>
+          </RevealWrapper>
 
           {/* Main Title */}
           <div className="mb-8 text-center">
-            <div className="justify-center">
-              <h1
-                className={`${
-                  theme === "dark" ? "text-white" : "text-black"
-                } poppins-semibold text-6xl leading-normal justify-center`}
-              >
-                Satu Klik,
-              </h1>
-            </div>
-            <div className="flex justify-center">
-              <h1
-                className={`${
-                  theme === "dark" ? "text-white" : "text-black"
-                } poppins-semibold text-6xl leading-normal`}
-              >
-                Pahami Hukum.
-              </h1>
-            </div>
+            <RevealWrapper direction="up" delay={0.4} duration={0.8}>
+              <div className="justify-center">
+                <h1
+                  className={`${
+                    theme === "dark" ? "text-white" : "text-black"
+                  } poppins-semibold text-6xl leading-normal justify-center`}
+                >
+                  Satu Klik,
+                </h1>
+              </div>
+            </RevealWrapper>
+            <RevealWrapper direction="up" delay={0.6} duration={0.8}>
+              <div className="flex justify-center">
+                <h1
+                  className={`${
+                    theme === "dark" ? "text-white" : "text-black"
+                  } poppins-semibold text-6xl leading-normal`}
+                >
+                  Pahami Hukum.
+                </h1>
+              </div>
+            </RevealWrapper>
           </div>
 
           {/* Description */}
-          <div className="mb-12 max-w-5xl mx-auto text-center">
-            <p
-              className={`${
-                theme === "dark" ? "text-white" : "text-black"
-              } poppins-medium text-2xl leading-normal justify-center`}
-            >
-              Tanya apa saja seputar UUD 1945 dan dapatkan jawaban yang akurat.
-              LawChain memanfaatkan RAG, LLaMA3, dan Ollama untuk memberikan
-              informasi hukum yang cepat, jelas, dan dapat dipercaya.
-            </p>
-          </div>
+          <RevealWrapper direction="up" delay={0.8} duration={0.8}>
+            <div className="mb-12 max-w-5xl mx-auto text-center">
+              <p
+                className={`${
+                  theme === "dark" ? "text-white" : "text-black"
+                } poppins-medium text-2xl leading-normal justify-center`}
+              >
+                Tanya apa saja seputar UUD 1945 dan dapatkan jawaban yang
+                akurat. LawChain memanfaatkan RAG, LLaMA3, dan Ollama untuk
+                memberikan informasi hukum yang cepat, jelas, dan dapat
+                dipercaya.
+              </p>
+            </div>
+          </RevealWrapper>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-center space-x-6">
-            <button
-              onClick={handleNavigateToChatbot}
-              className="w-64 h-14 bg-[#4F1787] text-white poppins-medium rounded-full hover:bg-[#3e125c] transition-colors duration-300"
-            >
-              Mulai Sekarang
-            </button>
-            <button
-              onClick={handleNavigateToChatbot}
-              className="w-24 h-14 bg-[#4F1787] rounded-full flex items-center justify-center hover:bg-[#3e125c] transition-colors duration-300"
-            >
-              <svg
-                className="w-6 h-6 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+          <RevealWrapper direction="up" delay={1.0} duration={0.8}>
+            <div className="flex items-center justify-center space-x-6">
+              <motion.button
+                onClick={handleNavigateToChatbot}
+                className="w-64 h-14 bg-[#4F1787] text-white poppins-medium rounded-full hover:bg-[#3e125c] transition-colors duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
+                Mulai Sekarang
+              </motion.button>
+              <motion.button
+                onClick={handleNavigateToChatbot}
+                className="w-24 h-14 bg-[#4F1787] rounded-full flex items-center justify-center hover:bg-[#3e125c] transition-colors duration-300"
+                whileHover={{ scale: 1.05, rotate: 5 }}
+                whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </motion.button>
+            </div>
+          </RevealWrapper>
+        </motion.div>
       </section>
 
       {/* Fitur Section */}
       <section id="fitur" className="relative z-10 py-20 px-8">
         <div className="max-w-6xl mx-auto text-center">
           {/* Fitur Image */}
-          <div className="flex justify-center">
-            <Image
-              src="/landing-page/fitur.svg"
-              alt="Fitur LawChain"
-              width={800}
-              height={600}
-              className="h-auto w-auto max-w-full filter drop-shadow-lg"
-            />
-          </div>
+          <RevealWrapper
+            direction="scale"
+            delay={0.2}
+            duration={1.0}
+            threshold={0.2}
+          >
+            <div className="flex justify-center">
+              <Image
+                src="/landing-page/fitur.svg"
+                alt="Fitur LawChain"
+                width={800}
+                height={600}
+                className="h-auto w-auto max-w-full filter drop-shadow-lg"
+              />
+            </div>
+          </RevealWrapper>
         </div>
       </section>
 
@@ -212,9 +258,16 @@ const HomeContent = () => {
       <section id="mengapa-kami" className="relative z-10 py-20 px-8">
         <div className="max-w-7xl mx-auto">
           {/* Animated Cards */}
-          <div className="w-full max-w-6xl mx-auto">
-            <AnimatedCardsContainer />
-          </div>
+          <RevealWrapper
+            direction="up"
+            delay={0.2}
+            duration={0.8}
+            threshold={0.2}
+          >
+            <div className="w-full max-w-6xl mx-auto">
+              <AnimatedCardsContainer />
+            </div>
+          </RevealWrapper>
         </div>
       </section>
     </div>

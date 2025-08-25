@@ -18,6 +18,7 @@ export {
   ComfortableUICard,
   AnimatedCardsContainer,
 } from "./FeatureCards";
+export { default as RevealWrapper } from "./RevealWrapper";
 
 // Re-export types
 export type { CSSProperties } from "react";
