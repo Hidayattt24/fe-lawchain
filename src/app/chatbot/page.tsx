@@ -663,7 +663,7 @@ const ChatbotPage = () => {
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3">
-                        <p
+                        <div
                           className={`leading-relaxed font-['Poppins'] whitespace-pre-wrap flex-1 ${
                             message.sender === "user"
                               ? "text-sm text-white/95"
@@ -673,7 +673,7 @@ const ChatbotPage = () => {
                           {message.sender === "bot"
                             ? renderMarkdownText(message.message)
                             : message.message}
-                        </p>
+                        </div>
 
                         {/* Copy button for bot messages */}
                         {message.sender === "bot" && !message.error && (
