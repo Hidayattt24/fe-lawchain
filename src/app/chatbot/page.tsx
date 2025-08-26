@@ -43,6 +43,9 @@ const ChatbotPage = () => {
     "unknown" | "healthy" | "unhealthy"
   >("unknown");
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [expandedSources, setExpandedSources] = useState<
+    Record<string, boolean>
+  >({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Function to copy text to clipboard
@@ -70,6 +73,14 @@ const ChatbotPage = () => {
         draggable: true,
       });
     }
+  };
+
+  // Function to toggle source expansion
+  const toggleSourceExpansion = (messageId: string) => {
+    setExpandedSources((prev) => ({
+      ...prev,
+      [messageId]: !prev[messageId],
+    }));
   };
 
   // Mapping dokumen ke URL sumber yang sebenarnya
@@ -660,102 +671,156 @@ const ChatbotPage = () => {
                           </div>
 
                           <div className="space-y-4">
-                            {message.sources.map((source, idx) => {
-                              const sourceInfo =
-                                documentSources[source.dokumen];
+                            {message.sources
+                              .slice(
+                                0,
+                                expandedSources[message.id] ? undefined : 1
+                              )
+                              .map((source, idx) => {
+                                const sourceInfo =
+                                  documentSources[source.dokumen];
 
-                              // Skip jika tidak ada preview yang bermakna
-                              if (
-                                !source.preview ||
-                                source.preview.trim().length < 10
-                              ) {
-                                return null;
-                              }
+                                // Skip jika tidak ada preview yang bermakna
+                                if (
+                                  !source.preview ||
+                                  source.preview.trim().length < 10
+                                ) {
+                                  return null;
+                                }
 
-                              return (
-                                <div
-                                  key={idx}
-                                  className="bg-gradient-to-br from-white via-slate-50/50 to-blue-50/30 rounded-2xl p-5 border border-slate-200/60 shadow-sm hover:shadow-md transition-all duration-300"
-                                >
-                                  {/* Header dokumen */}
-                                  <div className="flex items-start justify-between mb-3">
-                                    <div className="flex-1">
+                                return (
+                                  <div
+                                    key={idx}
+                                    className="bg-gradient-to-br from-white via-slate-50/50 to-blue-50/30 rounded-2xl p-5 border border-slate-200/60 shadow-sm hover:shadow-md transition-all duration-300"
+                                  >
+                                    {/* Header dokumen */}
+                                    <div className="flex items-start justify-between mb-3">
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-2">
+                                          <span
+                                            className="text-white px-2 py-1 rounded text-xs font-bold"
+                                            style={{
+                                              backgroundColor: "#6339D7",
+                                            }}
+                                          >
+                                            Dokumen {idx + 1}
+                                          </span>
+                                          <span className="text-sm font-semibold text-gray-700">
+                                            Halaman {source.halaman}
+                                          </span>
+                                        </div>
+                                        <h4 className="text-sm font-bold text-gray-900 mb-1 leading-tight">
+                                          {sourceInfo?.judul || source.dokumen}
+                                        </h4>
+                                        <p className="text-xs text-gray-600">
+                                          <span className="font-medium">
+                                            Institusi:
+                                          </span>{" "}
+                                          {sourceInfo?.institusi ||
+                                            source.institusi}
+                                        </p>
+                                      </div>
+                                    </div>
+
+                                    {/* Kutipan teks */}
+                                    <div
+                                      className="bg-gradient-to-r from-blue-50/50 to-indigo-50/50 rounded-xl p-4 border-l-4 mb-3"
+                                      style={{ borderLeftColor: "#6339D7" }}
+                                    >
                                       <div className="flex items-center gap-2 mb-2">
                                         <span
-                                          className="text-white px-2 py-1 rounded text-xs font-bold"
+                                          className="text-xs font-semibold uppercase tracking-wide"
+                                          style={{ color: "#6339D7" }}
+                                        >
+                                          Kutipan Dokumen
+                                        </span>
+                                      </div>
+                                      <blockquote className="text-sm text-gray-800 leading-relaxed italic">
+                                        "{source.preview.trim()}"
+                                      </blockquote>
+                                    </div>
+
+                                    {/* Link ke dokumen asli */}
+                                    {sourceInfo?.sumber && (
+                                      <div className="flex items-center justify-between pt-3 border-t border-gray-200/50">
+                                        <div className="text-xs text-gray-500">
+                                          Dokumen resmi dari{" "}
+                                          {sourceInfo.institusi}
+                                        </div>
+                                        <a
+                                          href={sourceInfo.sumber}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          className="inline-flex items-center gap-2 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-200 shadow-sm hover:shadow hover:opacity-90"
                                           style={{ backgroundColor: "#6339D7" }}
                                         >
-                                          Dokumen {idx + 1}
-                                        </span>
-                                        <span className="text-sm font-semibold text-gray-700">
-                                          Halaman {source.halaman}
-                                        </span>
+                                          <IconExternalLink size={12} />
+                                          <span>Buka Dokumen</span>
+                                        </a>
                                       </div>
-                                      <h4 className="text-sm font-bold text-gray-900 mb-1 leading-tight">
-                                        {sourceInfo?.judul || source.dokumen}
-                                      </h4>
-                                      <p className="text-xs text-gray-600">
-                                        <span className="font-medium">
-                                          Institusi:
-                                        </span>{" "}
-                                        {sourceInfo?.institusi ||
-                                          source.institusi}
-                                      </p>
-                                    </div>
+                                    )}
                                   </div>
+                                );
+                              })}
 
-                                  {/* Kutipan teks */}
-                                  <div
-                                    className="bg-gradient-to-r from-blue-50/50 to-indigo-50/50 rounded-xl p-4 border-l-4 mb-3"
-                                    style={{ borderLeftColor: "#6339D7" }}
-                                  >
-                                    <div className="flex items-center gap-2 mb-2">
-                                      <span
-                                        className="text-xs font-semibold uppercase tracking-wide"
-                                        style={{ color: "#6339D7" }}
-                                      >
-                                        Kutipan Dokumen
-                                      </span>
-                                    </div>
-                                    <blockquote className="text-sm text-gray-800 leading-relaxed italic">
-                                      "{source.preview.trim()}"
-                                    </blockquote>
-                                  </div>
-
-                                  {/* Link ke dokumen asli */}
-                                  {sourceInfo?.sumber && (
-                                    <div className="flex items-center justify-between pt-3 border-t border-gray-200/50">
-                                      <div className="text-xs text-gray-500">
-                                        Dokumen resmi dari{" "}
-                                        {sourceInfo.institusi}
-                                      </div>
-                                      <a
-                                        href={sourceInfo.sumber}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-colors duration-200 shadow-sm hover:shadow hover:opacity-90"
-                                        style={{ backgroundColor: "#6339D7" }}
-                                      >
-                                        <IconExternalLink size={12} />
-                                        <span>Buka Dokumen</span>
-                                      </a>
-                                    </div>
-                                  )}
-                                </div>
-                              );
-                            })}
-
-                            {/* Disclaimer jika ada lebih banyak sumber */}
-                            {message.sources.length > 3 && (
+                            {/* Load More / Show Less Button */}
+                            {message.sources.length > 1 && (
                               <div className="text-center mt-4">
-                                <div className="inline-flex items-center gap-2 bg-gray-100 text-gray-600 px-4 py-2 rounded-full text-xs">
-                                  <span>
-                                    Menampilkan 3 dari {message.sources.length}{" "}
-                                    referensi
-                                  </span>
-                                  <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-                                  <span>Sumber lain tersedia</span>
-                                </div>
+                                <button
+                                  onClick={() =>
+                                    toggleSourceExpansion(message.id)
+                                  }
+                                  className="inline-flex items-center gap-2 bg-gradient-to-r from-[#6339D7] to-purple-600 hover:from-[#5429c4] hover:to-purple-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105"
+                                >
+                                  {expandedSources[message.id] ? (
+                                    <>
+                                      <span>Tampilkan Lebih Sedikit</span>
+                                      <svg
+                                        className="w-4 h-4 transform rotate-180"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                          d="M19 9l-7 7-7-7"
+                                        />
+                                      </svg>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <span>
+                                        Lihat {message.sources.length - 1}{" "}
+                                        Referensi Lainnya
+                                      </span>
+                                      <svg
+                                        className="w-4 h-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                      >
+                                        <path
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                          strokeWidth={2}
+                                          d="M19 9l-7 7-7-7"
+                                        />
+                                      </svg>
+                                    </>
+                                  )}
+                                </button>
+
+                                {!expandedSources[message.id] && (
+                                  <div className="mt-2">
+                                    <span className="text-xs text-gray-500">
+                                      Menampilkan 1 dari{" "}
+                                      {message.sources.length} referensi • Klik
+                                      untuk melihat semua
+                                    </span>
+                                  </div>
+                                )}
                               </div>
                             )}
                           </div>
