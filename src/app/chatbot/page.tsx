@@ -83,6 +83,116 @@ const ChatbotPage = () => {
     }));
   };
 
+  // Function to render markdown-like text
+  const renderMarkdownText = (text: string) => {
+    if (!text) return null;
+
+    // Process text line by line to handle lists and other formatting
+    const lines = text.split("\n");
+
+    return lines.map((line, lineIndex) => {
+      // Handle numbered lists (1. 2. 3.)
+      const numberedListMatch = line.match(/^(\d+)\.\s+(.+)$/);
+      if (numberedListMatch) {
+        const [, number, content] = numberedListMatch;
+        return (
+          <div key={lineIndex} className="flex items-start gap-2 mb-1">
+            <span className="font-semibold text-[#6339D7] min-w-[20px]">
+              {number}.
+            </span>
+            <span className="flex-1">{processInlineMarkdown(content)}</span>
+          </div>
+        );
+      }
+
+      // Handle bullet lists (- or *)
+      const bulletListMatch = line.match(/^[-*]\s+(.+)$/);
+      if (bulletListMatch) {
+        const [, content] = bulletListMatch;
+        return (
+          <div key={lineIndex} className="flex items-start gap-2 mb-1">
+            <span className="text-[#6339D7] min-w-[10px] mt-1">•</span>
+            <span className="flex-1">{processInlineMarkdown(content)}</span>
+          </div>
+        );
+      }
+
+      // Handle headers (### text)
+      const headerMatch = line.match(/^(#{1,3})\s+(.+)$/);
+      if (headerMatch) {
+        const [, hashes, content] = headerMatch;
+        const level = hashes.length;
+        const headerClass =
+          level === 1
+            ? "text-lg font-bold text-gray-900 mb-2 mt-4"
+            : level === 2
+            ? "text-md font-bold text-gray-800 mb-1 mt-3"
+            : "text-sm font-bold text-gray-700 mb-1 mt-2";
+
+        return (
+          <div key={lineIndex} className={headerClass}>
+            {processInlineMarkdown(content)}
+          </div>
+        );
+      }
+
+      // Handle empty lines
+      if (line.trim() === "") {
+        return <div key={lineIndex} className="h-2"></div>;
+      }
+
+      // Regular paragraph with inline markdown
+      return (
+        <div key={lineIndex} className="mb-1">
+          {processInlineMarkdown(line)}
+        </div>
+      );
+    });
+  };
+
+  // Function to process inline markdown (bold, italic)
+  const processInlineMarkdown = (text: string) => {
+    if (!text) return null;
+
+    // First handle bold text (**text**)
+    let parts = text.split(/(\*\*[^*]+\*\*)/g);
+
+    return parts.map((part, index) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        // Bold text
+        const boldText = part.slice(2, -2);
+        return (
+          <span key={index} className="font-bold text-gray-900">
+            {processItalicText(boldText)}
+          </span>
+        );
+      } else {
+        return processItalicText(part, index);
+      }
+    });
+  };
+
+  // Function to process italic text (*text*)
+  const processItalicText = (text: string, baseIndex: number = 0) => {
+    if (!text) return null;
+
+    const parts = text.split(/(\*[^*]+\*)/g);
+
+    return parts.map((part, index) => {
+      if (part.startsWith("*") && part.endsWith("*") && part.length > 2) {
+        // Italic text (but not ** which is handled above)
+        const italicText = part.slice(1, -1);
+        return (
+          <span key={`${baseIndex}-${index}`} className="italic text-gray-800">
+            {italicText}
+          </span>
+        );
+      } else {
+        return <span key={`${baseIndex}-${index}`}>{part}</span>;
+      }
+    });
+  };
+
   // Mapping dokumen ke URL sumber yang sebenarnya
   const documentSources: Record<
     string,
@@ -560,7 +670,9 @@ const ChatbotPage = () => {
                               : "text-sm text-gray-800"
                           }`}
                         >
-                          {message.message}
+                          {message.sender === "bot"
+                            ? renderMarkdownText(message.message)
+                            : message.message}
                         </p>
 
                         {/* Copy button for bot messages */}
